@@ -11,13 +11,13 @@ import org.springframework.web.service.annotation.GetExchange;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 
-//@FeignClient(value = "inventory", url="${inventory.url}")
+//@FeignClient(value = "inventory", url="${inventory.url}") name=servicename will work with loadbalancer
 public interface InventoryClient {
 
 	Logger log = LoggerFactory.getLogger(InventoryClient.class);
 	
 	//@RequestMapping(method = RequestMethod.GET, value="/api/inventory")
-	@GetExchange
+	@GetExchange("/api/inventory")
 	@CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
 	@Retry(name = "inventory")
 	boolean isInStock(@RequestParam String skuCode,@RequestParam Integer quantity);

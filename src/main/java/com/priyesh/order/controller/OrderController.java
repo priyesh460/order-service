@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.priyesh.order.dto.OrderRequest;
 import com.priyesh.order.service.OrderService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,7 +25,6 @@ public class OrderController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public String placeOrder(@RequestBody OrderRequest orderRequest)
 	{
-		orderService.placeOrder(orderRequest);
-		return "Order placed Successfully";
+		return orderService.placeOrder(orderRequest);
 	}
 }

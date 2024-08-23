@@ -8,6 +8,7 @@ import com.priyesh.order.client.InventoryClient;
 import com.priyesh.order.dto.OrderRequest;
 import com.priyesh.order.model.Order;
 import com.priyesh.order.repository.OrderRepository;
+import com.priyesh.order.config.RestClientComponents;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +17,12 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
 	
 	private final OrderRepository OrderRepository;
+	private final RestClientComponents RestClientComponents;
 	private final InventoryClient inventoryClient;
 	
-	public void placeOrder(OrderRequest orderRequest)
+	public String placeOrder(OrderRequest orderRequest)
 	{
-		var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+		var isProductInStock = /*RestClientComponents.getInventoryClient()*/inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
 		
 		if(isProductInStock)
 		{
@@ -30,10 +32,11 @@ public class OrderService {
 			order.setSkuCode(orderRequest.skuCode());
 			order.setQuantity(orderRequest.quantity());
 			OrderRepository.save(order);
+			return "Order placed Successfully";
 		}
 		else
 		{
-			throw new RuntimeException("Product with skuCode " + orderRequest.skuCode() + " is not in Stock");
+			return "Product with skuCode " + orderRequest.skuCode() + " is not in Stock";
 		}
 	}
 
